@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Country Flag Battle - Live Streaming Suite</title>
+  <meta name="description"
+    content="Interactive Country Flag Battle simulation suite for YouTube Shorts, TikTok Live, and Twitch streams. Features Physics Battle Royale, Territorial Conquest, and Elimination Wheel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <!-- 9:16 Vertical Stream Frame (OBS & Mobile Viewport) -->
+    <div class="stream-wrapper" id="streamContainer">
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Stream Overlay Layer -->
+      <div class="stream-overlay">
+
+        <!-- Top Header -->
+        <header class="stream-header">
+          <div class="stream-title-group">
+            <span class="live-pill">LIVE</span>
+            <h1 id="matchRoundTitle">MATCH #1</h1>
+          </div>
+          <div class="stream-status-pill" id="aliveCount">
+            40 / 40 ALIVE
+          </div>
+        </header>
+
+        <!-- Kill Feed -->
+        <div class="kill-feed" id="killFeed"></div>
+
+        <!-- Mini Live Leaderboard -->
+        <div class="stream-leaderboard-mini">
+          <div class="leaderboard-mini-header">
+            <span>🏆 Leaderboard</span>
+          </div>
+          <div class="leaderboard-mini-list" id="leaderboardMiniList"></div>
+        </div>
+
+        <!-- Bottom Stream Area -->
+        <div class="stream-bottom-area">
+          <!-- Simulated Live Stream Chat Box -->
+          <div class="stream-chat-box" id="streamChatBox"></div>
+
+          <!-- Call To Action Stream Banner -->
+          <div class="stream-cta-banner">
+            🔥 TYPE !BOOST [COUNTRY] IN CHAT TO CHEER! 🔥
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Streamer Control Panel (Desktop & Studio Tools) -->
+    <div class="streamer-dashboard">
+
+      <div class="dashboard-header">
+        <h2>🎮 Streamer Control Panel</h2>
+        <button class="obs-toggle-badge" id="obsModeToggle" title="Toggle Clean Mode for OBS Browser Source">
+          📺 OBS Clean Mode
+        </button>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div class="mode-tabs" style="grid-template-columns: repeat(4, 1fr);">
+        <button class="mode-tab-btn active" data-mode="rotating">
+          <span class="icon">🔄</span>
+          <span>198 Flag Drop</span>
+        </button>
+        <button class="mode-tab-btn" data-mode="physics">
+          <span class="icon">⚔️</span>
+          <span>Battle Royale</span>
+        </button>
+        <button class="mode-tab-btn" data-mode="territory">
+          <span class="icon">🌍</span>
+          <span>Territory War</span>
+        </button>
+        <button class="mode-tab-btn" data-mode="wheel">
+          <span class="icon">🎰</span>
+          <span>Roulette Wheel</span>
+        </button>
+      </div>
+
+      <!-- Match Controls -->
+      <div class="control-grid">
+        <button class="btn-action primary" id="btnPlayPause">
+          ⏸️ Pause Match
+        </button>
+        <button class="btn-action danger" id="btnRestart">
+          🔄 Restart Round
+        </button>
+      </div>
+
+      <!-- Game Speed & Auto-Loop Settings -->
+      <div class="config-card">
+        <div class="config-card-header">⚡ Simulation Speed</div>
+        <div class="speed-selector">
+          <button class="speed-btn" data-speed="0.5">0.5x Slow</button>
+          <button class="speed-btn active" data-speed="1.0">1.0x Normal</button>
+          <button class="speed-btn" data-speed="1.5">1.5x Fast</button>
+          <button class="speed-btn" data-speed="2.5">2.5x Turbo</button>
+        </div>
+      </div>
+
+      <!-- Auto Loop & Sound Settings -->
+      <div class="config-card">
+        <div class="toggle-row">
+          <span>🔁 24/7 Auto-Loop (AFK Next Round)</span>
+          <label class="switch">
+            <input type="checkbox" id="autoLoopCheck" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span>🔇 Mute Sound FX</span>
+          <label class="switch">
+            <input type="checkbox" id="muteCheck">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Quick Country Cheer Boost (Streamer Interaction) -->
+      <div class="quick-cheer-section">
+        <div class="config-card-header">💥 Quick Country Boost</div>
+        <div class="quick-cheer-grid">
+          <button class="cheer-pill-btn" data-country="us">🇺🇸 USA</button>
+          <button class="cheer-pill-btn" data-country="br">🇧🇷 Brazil</button>
+          <button class="cheer-pill-btn" data-country="in">🇮🇳 India</button>
+          <button class="cheer-pill-btn" data-country="gb">🇬🇧 UK</button>
+          <button class="cheer-pill-btn" data-country="de">🇩🇪 Germany</button>
+          <button class="cheer-pill-btn" data-country="fr">🇫🇷 France</button>
+          <button class="cheer-pill-btn" data-country="jp">🇯🇵 Japan</button>
+          <button class="cheer-pill-btn" data-country="mx">🇲🇽 Mexico</button>
+        </div>
+      </div>
+
+      <!-- Streamer Live Chat Input -->
+      <div class="config-card">
+        <div class="config-card-header">💬 Send Stream Announcement / Boost</div>
+        <div class="streamer-chat-input-bar">
+          <input type="text" id="streamerChatInput" placeholder="e.g. !boost usa or !shield br or custom cheer">
+          <button class="btn-send-chat" id="btnSendChat">Send</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/countries.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/rotating-arena.js"></script>
+  <script src="js/physics-arena.js"></script>
+  <script src="js/territory-war.js"></script>
+  <script src="js/wheel-roulette.js"></script>
+  <script src="js/chat-simulation.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
